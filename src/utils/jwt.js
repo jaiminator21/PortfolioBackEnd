@@ -1,18 +1,17 @@
 const jwt = require("jsonwebtoken");
 require("dotenv").config();
 
-const generateSign = (id, email) => {
-  /* generamos el token */
+const generateSign = (id, email) => { //token generator
   return jwt.sign({ id, email }, process.env.JWT_KEY, {
-    expiresIn: "9999h",
-  }); /* quiero que utilices esta llave para que devuelvas un token encriptado que contenga la id y el email del usuario. El token tiene validez durante 1 hora. */
+    expiresIn: "24h", //token duratio. It will expire in 24h since its generation
+  }); 
 };
 const verifySign = (token) => {
   return jwt.verify(
     token,
     process.env.JWT_KEY
-  ); /* recibe un token y hace la comprobación del token, es como si lo desencriptara con la llave que le hemos especificado en JWT_KEY para ver si se abre o no */
-  /* cuento para Helena: creamos una cerradura (token) y creamos una llave (JWT_KEY), para verificar la cerradura intentamos abrirla con la llave, si se abre es que es nuestra cerradura */
+  );
+ //verification that checks if the token is valid
 };
 
 module.exports = { generateSign, verifySign };

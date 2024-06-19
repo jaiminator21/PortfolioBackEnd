@@ -1,45 +1,33 @@
 const User = require("../api/models/users.model");
-const {
-  verifySign,
-} = require("../utils/jwt"); /* nos traemos la función de verificación de token a partir de la llave */
+const { verifySign } = require("../utils/jwt"); // import function from jwt.js
 
 const isAuth = async (req, res, next) => { 
-    
-  /* Verifica el TOKEN del usuario */
-
   try {
     const authorization = req.headers.authorization;
-    if (!authorization) {
-      /* si no hay autorización ... mensaje error */
-      return res.status(401).json({ message: "No estás autorizado." });
+    if (!authorization) { // if there are no authorization headers 
+      return res.status(401).json({ message: "Unauthorized connection." });
     }
     const token =
       authorization.split(
         " "
-      )[1]; /* si está autorizado ... limpiamos el token, recibimos = Bearer <token> -> hacemos un split para quedarnos solo con el token limpio */
+      )[1]; /* token clean up, format = Bearer <token> -> this is done to separate Bearer from thetoken */
 
-    if (!token) {
-      /* si no existe o no cuadra con nuestro token... mensaje error */
-      return res.status(401).json({ message: "Token invalido." });
+    if (!token) { // checks if there is a token
+      return res.status(401).json({ message: "Invalid token." });
     }
-    const tokenVerified =
-      verifySign(
-        token
-      ); /* si el token existe... verifica el token con la llave que le hemos dado*/
+    const tokenVerified =verifySign(token); // if there is a token we verify is authenticity
 
-    if (!tokenVerified.id) {
-      /* si el token desencryptado no devuelve una id, mensaje de error, me enseñas el token que has intentado desencryptar */
+    if (!tokenVerified.id) { // if token isn't authenitc (fake) it will send us an error
       return res.status(401).json(tokenVerified);
     }
-    const userLogged = await User.findById(
+    const userLogged = await User.findById( // if token is authenitc it will search for the user in the DB
       tokenVerified.id
-    ); /* todo va bien? usuario loggeado, comprobar que el usuario existe buscando por id */
-    req.user = userLogged; /* existe? pues está loggeado */
+    ); 
+    req.user = userLogged; //lets the hole app know the user is authentic
 
-    next(); /* passa a la siguiente funcion */
+    next(); // goes to the function that follows the [isAuth] on the routes
   } catch (error) {
-    /* que algo va mal? */
-    return res.status(500).json(error); /* pues nos dices el que. */
+    return res.status(500).json(error); //prints error msg
   }
 };
 

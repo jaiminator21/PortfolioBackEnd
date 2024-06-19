@@ -1,40 +1,33 @@
 const User = require("../models/users.model");
 const { generateSign } = require("../../utils/jwt");
-const {
-  validateEmail,
-  validatePassword,
-  usedEmail,
-} = require("../../utils/validators");
+const { validateEmail, validatePassword, usedEmail } = require("../../utils/validators");
 const bcrypt = require("bcrypt");
 
 const register = async (req, res) => {
-  /* REGISTER */
-  console.log(req);
   try {
     const newUser = new User(req.body);
-    if (!validateEmail(newUser.email)) {
+    if (!validateEmail(newUser.email)) { //using validators to check if the email is valid
       return res.status(400).json({
         message:
-          "El email introducido no cumple con los parámetros requeridos.",
-      }); /* si la validación no pasa, error. */
+          "Please enter a valid email.",
+      }); 
     }
-    if (!validatePassword(newUser.password)) {
+    if (!validatePassword(newUser.password)) {//using validators to check if the password is valid
       return res.status(400).json({
         message:
-          "La contraseña introducida no cumple con los parámetros requeridos: minúscula, mayúscula, un número y un carácter especial. ",
-      }); /* si la validacion de password no pasa, error */
+          "The password does not meet the required parameters: 1 lowercase, 1 uppercase, 1 number, and 1 special character. ",
+      });     
     }
-    if (await usedEmail(newUser.email)) {
+    if (await usedEmail(newUser.email)) {//checks if the email being registered exists
       return res.status(400).json({
-        message: "El email introducido ya se encuentra en uso.",
-      }); /* si no pasa validación, error */
+        message: "This email is already in use.",
+      });
     }
 
-    const salt = 10;
-    newUser.password = bcrypt.hashSync(
-      newUser.password,
-      salt
-    ); /* ENCRIPTAMOS LA CONTRASEÑA */
+    const salt = 10; //lvl of encryption
+    newUser.password = bcrypt.hashSync( //function to encrypt the password
+      newUser.password,salt
+    );
     const createdUser = await newUser.save();
     return res.status(201).json(createdUser);
   } catch (error) {

@@ -1,20 +1,24 @@
-const mongoose = require("mongoose"); /*si trabajamos en remoto*/
-require("dotenv").config(); /*DOTENV ENCRIPTA*/
+const mongoose = require("mongoose");
+// Load environment variables from the .env file
+require("dotenv").config();
 
-const DB_URL = process.env.DB_URL; /* ESTAMOS INVOCANDO LA URL DENTRO DE .ENV */
+// Get variable URL from .env file
+const DB_URL = process.env.DB_URL;
 
 const connect = async () => {
   try {
+    // DB connection
     const db = await mongoose.connect(DB_URL);
-    const { name, host } =
-      db.connection; /* guardamos name y host que viene de la conexión de la url */
 
-    console.log(
-      `Conectado a la base de datos ${name} DB en el host ${host}`
-    ); /* nos devuelve la info de quien está conectado y donde */
+    // Gets the name and host form DB
+    const { name, host } = db.connection;
+    // If connection is successful
+    console.log(`Connected to the database ${name} DB at host ${host}`);
   } catch (error) {
-    console.log("Error al conectar con nuestra base de datos", error);
+    // If connection is unsuccessful
+    console.log("Error connecting to our database", error);
   }
 };
 
-module.exports = { connect }; /* nos interesa tenerla en index, no aquí */
+// Funtion export
+module.exports = { connect };
