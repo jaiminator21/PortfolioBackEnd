@@ -1,23 +1,20 @@
-const multer = require("multer"); /* nos traemos multer para gestionar archivos */
-const cloudinary = require("cloudinary").v2; /* traemos cloudinary */
-const {
-  CloudinaryStorage,
-} = require("multer-storage-cloudinary"); /* esto es la otra libreria instalada */
+const multer = require("multer");
+const cloudinary = require("cloudinary").v2; 
+const { CloudinaryStorage } = require("multer-storage-cloudinary"); 
 
 const storage =
-  new CloudinaryStorage /* aqui le decimos donde tiene que guardar, que es el alamacen CloudinaryStorage y como lo tiene que guardar */(
+//we tell it where it has to save the files, what is the CloudinarryStorage and how it has to save it
+  new CloudinaryStorage(
     {
-      cloudinary: cloudinary /* utilizamos la libreria cloudinary */,
+      cloudinary: cloudinary,//What library to use
       params: {
-        /* los parametros que necesita es el monbre de la carpeta y los tipos de formato que soporta */
-        folder: "libreria",
-        allowedFormarts: ["jpg", "png", "jpeg", "gif", "webp", "pdf"],
+        folder: "games", //folder name
+        allowedFormarts: ["jpg", "png", "jpeg", "gif", "webp", "pdf"], //file types
       },
     }
   );
 
-const upload = multer({
-  storage,
-}); /* esto es el multer, para ver como gestiona los archivos */
+  const upload = multer({ storage: storage }); // muter is the file managment
+  const uploadMultiple = upload.array('images', 10);
 
-module.exports = upload;
+module.exports = {upload, uploadMultiple};

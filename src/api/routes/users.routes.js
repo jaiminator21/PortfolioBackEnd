@@ -8,10 +8,10 @@ const {
 } = require("../controllers/users.controllers");
 const {
   isAuth,
-} = require("../../middlewares/auth"); /* importamos la autorización */
+} = require("../../middlewares/auth"); 
 
-userRoutes.post("/register", register); /* registrar usuario */
-userRoutes.post("/login", login); // acceder como usuario
+userRoutes.post("/register", register); 
+userRoutes.post("/login", login); 
 userRoutes.post("/logout", [isAuth], logout);
 userRoutes.get("/checksession", [isAuth], checkSession);
 

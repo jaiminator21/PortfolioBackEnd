@@ -7,10 +7,6 @@ const gameSchema = new Schema(
       type: String,
       required: false,
     },
-    logo: {
-      type: String,
-      required: true,
-    },
     genero: {
       type: String,
       required: true,

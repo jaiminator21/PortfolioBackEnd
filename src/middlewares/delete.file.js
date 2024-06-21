@@ -1,19 +1,20 @@
 const cloudinary = require("cloudinary").v2;
 
 const deleteFile = (url) => {
-  const imgSplitted = url.split("/"); // generar un array de cada elemento que esta separado por /
+  // 1. Extract Public ID from URL
+  const imgSplitted = url.split("/");
+  const nameSplitted = imgSplitted[imgSplitted.length - 1].split(".");
+  const folder = imgSplitted[imgSplitted.length - 2];
+  const imgToDelete = `${folder}/${nameSplitted[0]}`;
 
-  const nameSplitted = imgSplitted[imgSplitted.length - 1].split("."); // estoy haciendo un array que me separe el nombre de la imagen de su extension
-
-  const folder =
-    imgSplitted[
-      imgSplitted.length - 2
-    ]; /* la carpeta de donde lo estamos guardando */
-
-  const imgToDelete = `${folder}/${nameSplitted[0]}`; /* guardamos valores para decirle donde lo queremos eliminar */
-
-  cloudinary.uploader.destroy(imgToDelete, () =>
-    console.log("imagen borrada")
-  ); /* segun tengamos la imagen, que elimine el archivo */
+  // 2. Delete Image using Cloudinary Uploader
+  cloudinary.uploader.destroy(imgToDelete, (error, result) => {
+    if (error) {
+      console.error("Error deleting image:", error);
+    } else {
+      console.log("Imagen borrada" /* Image deleted (Spanish) */);
+    }
+  });
 };
+
 module.exports = { deleteFile };
