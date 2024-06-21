@@ -13,8 +13,8 @@ const getGames = async (req, res) => {
 };
 
  const postGame = async (req, res) => {
-  console.log('req.body:', req.body); // Log para verificar los datos de texto
-  console.log('req.files:', req.files); // Log para verificar los archivos subidos
+  console.log('req.body:', req.body); 
+  console.log('req.files:', req.files); 
   try {
     const newGame = new Game(req.body); // Create a new Game instance with data from the req.body
     
