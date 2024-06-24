@@ -5,10 +5,26 @@ const cloudinary = require("cloudinary").v2;
 const getGames = async (req, res) => {
   console.log(req);
   try {
-    const allpeliculas = await Game.find(); // Retrieve all games from the database using the Game model
-    return res.status(200).json(allpeliculas); // Return a JSON response with status 200 containing all games
+    const game = await Game.find(); // Retrieve all games from the database using the Game model
+    return res.status(200).json(game); // Return a JSON response with status 200 containing all games
   } catch (error) {
     return res.status(500).json(error); // If an error occurs, return the error msg
+  }
+};
+
+const getGameById = async (req, res, next) => {
+  try {
+    const game = await Game.findById(req.params.id);
+    if (game) {
+      res.status(200).json({
+        status: 200,
+        data: game,
+      });
+    } else {
+      res.status(404).json({ status: 404, message: "Game not found" });
+    }
+  } catch (error) {
+    next(error);
   }
 };
 
@@ -64,4 +80,4 @@ const deleteGame = async (req, res) => {
   }
 };
 
-module.exports = { getGames, postGame, putGame, deleteGame }; // Export the functions getGames, postGame, putGame, and deleteGame for use in other files
+module.exports = { getGames, getGameById, postGame, putGame, deleteGame }; // Export the functions getGames, postGame, putGame, and deleteGame for use in other files
