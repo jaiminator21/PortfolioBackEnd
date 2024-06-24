@@ -12,18 +12,20 @@ const register = async (req, res) => {
           "Please enter a valid email.",
       }); 
     }
+    console.log("email correcto");
     if (!validatePassword(newUser.password)) {//using validators to check if the password is valid
       return res.status(400).json({
         message:
           "The password does not meet the required parameters: 1 lowercase, 1 uppercase, 1 number, and 1 special character. ",
       });     
     }
+    console.log("password correcto");
     if (await usedEmail(newUser.email)) {//checks if the email being registered exists
       return res.status(400).json({
         message: "This email is already in use.",
       });
     }
-
+    console.log("email unico");
     const salt = 10; //lvl of encryption
     newUser.password = bcrypt.hashSync( //function to encrypt the password
       newUser.password,salt
@@ -36,6 +38,7 @@ const register = async (req, res) => {
 };
 
 const login = async (req, res) => {
+  console.log(req.body);
   try {
     const userInfo = await User.findOne({ email: req.body.email }); //after the isAuth, it searches for the email that it recived 
     if (!userInfo) {//if there is no user
